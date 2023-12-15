@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha256-yIDrPSXHZdOZhAqiBP7CKzIwMQmRCJ8UeB8Jo17YC4o=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"sosquan.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.19.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Python大麦网抢票前言最近突然对抢票脚本感兴趣，就在网上找了一些相关内容，有的只讲使用方法，也不上传代码，也有用代码卖钱的。总之质量参差不齐，就想着自己写一个抢票脚本的过程，虽然不能对所有网站起作用，但基本上所有脚本原理都是模拟正常买东西的流程，至少在思路上不会有太大变化。下面就以XXX网购买演出票代码为例，总结一下抢票的一个思路，理论上适用于电商等平台。但因为此类脚本为灰色地带，因此在使用脚">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python大麦网抢票">
+<meta property="og:url" content="https://sosquan.github.io/2023/12/15/Python%E5%A4%A7%E9%BA%A6%E7%BD%91%E6%8A%A2%E7%A5%A8/index.html">
+<meta property="og:site_name" content="小王的个人空间">
+<meta property="og:description" content="Python大麦网抢票前言最近突然对抢票脚本感兴趣，就在网上找了一些相关内容，有的只讲使用方法，也不上传代码，也有用代码卖钱的。总之质量参差不齐，就想着自己写一个抢票脚本的过程，虽然不能对所有网站起作用，但基本上所有脚本原理都是模拟正常买东西的流程，至少在思路上不会有太大变化。下面就以XXX网购买演出票代码为例，总结一下抢票的一个思路，理论上适用于电商等平台。但因为此类脚本为灰色地带，因此在使用脚">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-12-15T06:29:14.000Z">
+<meta property="article:modified_time" content="2023-12-15T06:29:44.864Z">
+<meta property="article:author" content="What">
+<meta property="article:tag" content="Selenium">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://sosquan.github.io/2023/12/15/Python%E5%A4%A7%E9%BA%A6%E7%BD%91%E6%8A%A2%E7%A5%A8/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://sosquan.github.io/2023/12/15/Python%E5%A4%A7%E9%BA%A6%E7%BD%91%E6%8A%A2%E7%A5%A8/","path":"2023/12/15/Python大麦网抢票/","title":"Python大麦网抢票"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Python大麦网抢票 | 小王的个人空间</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">小王的个人空间</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Python%E5%A4%A7%E9%BA%A6%E7%BD%91%E6%8A%A2%E7%A5%A8"><span class="nav-number">1.</span> <span class="nav-text">Python大麦网抢票</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">2.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E7%99%BB%E5%BD%95"><span class="nav-number">3.</span> <span class="nav-text">1. 登录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%8A%A2%E7%A5%A8%E5%B9%B6%E4%B8%8B%E5%8D%95"><span class="nav-number">4.</span> <span class="nav-text">2. 抢票并下单</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E6%8A%A2%E7%A5%A8"><span class="nav-number">5.</span> <span class="nav-text">3. 抢票</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E4%B8%8B%E5%8D%95"><span class="nav-number">6.</span> <span class="nav-text">4. 下单</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">What</p>
+  <div class="site-description" itemprop="description">有容乃大，无欲则刚</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://sosquan.github.io/2023/12/15/Python%E5%A4%A7%E9%BA%A6%E7%BD%91%E6%8A%A2%E7%A5%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="What">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小王的个人空间">
+      <meta itemprop="description" content="有容乃大，无欲则刚">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Python大麦网抢票 | 小王的个人空间">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Python大麦网抢票
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2023-12-15 14:29:14 / 修改时间：14:29:44" itemprop="dateCreated datePublished" datetime="2023-12-15T14:29:14+08:00">2023-12-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h3 id="Python大麦网抢票"><a href="#Python大麦网抢票" class="headerlink" title="Python大麦网抢票"></a>Python大麦网抢票</h3><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>最近突然对抢票脚本感兴趣，就在网上找了一些相关内容，有的只讲使用方法，也不上传代码，也有用代码卖钱的。总之质量参差不齐，就想着自己写一个抢票脚本的过程，虽然不能对所有网站起作用，但基本上所有脚本原理都是模拟正常买东西的流程，至少在思路上不会有太大变化。<br>下面就以XXX网购买演出票代码为例，总结一下抢票的一个思路，理论上适用于电商等平台。但因为此类脚本为灰色地带，<strong>因此在使用脚本时需要遵守相关的法律法规和道德规范，避免出现违规操作的情况发生。</strong></p>
+<p>我将整个流程分为：<strong>登录–&gt;抢票–&gt;选座、选地址–&gt;下单成功</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 导入必要模块</span></span><br><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver <span class="comment"># webdrive用来操作浏览器</span></span><br><span class="line"><span class="keyword">from</span> time <span class="keyword">import</span> sleep		   <span class="comment"># 做一些延时操作，避免请求频率过高</span></span><br><span class="line"><span class="keyword">import</span> pickle        		   <span class="comment"># 保存和读取cookie实现免登陆</span></span><br><span class="line"><span class="keyword">import</span> os                      <span class="comment"># 操作文件的模块</span></span><br></pre></td></tr></table></figure>
+
+<p>首先要明确目标。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">main_url = <span class="string">&#x27;www.example.com&#x27;</span> 			<span class="comment"># 要抢票的主页url</span></span><br><span class="line">login_url = <span class="string">&#x27;www.example.com/login&#x27;</span>  	<span class="comment"># 该网站的登录页面</span></span><br><span class="line">target_url = <span class="string">&#x27;www.example.com/target&#x27;</span>	<span class="comment"># 商品、门票购买页面</span></span><br></pre></td></tr></table></figure>
+
+<p>设置好全局变量，初始化类</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Concert</span>():</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        self.status = <span class="number">0</span>             											<span class="comment"># 显示程序目前运行状态</span></span><br><span class="line">        self.login_methed = <span class="number">1</span>       											<span class="comment"># ｛0：模拟登录，1：cookie登录｝</span></span><br><span class="line">        self.driver = webdriver.Chrome(executable_path = <span class="string">&#x27;chromedriver.exe&#x27;</span>) 	<span class="comment"># 默认Chrome浏览器</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="1-登录"><a href="#1-登录" class="headerlink" title="1. 登录"></a>1. 登录</h3><p>这里将登录分为两种模式：<strong>手动登录</strong>和<strong>cookie登录</strong>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 开始登陆</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">login</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="comment"># 登陆模式0：手动登录；</span></span><br><span class="line">    <span class="keyword">if</span> self.login_methed == <span class="number">0</span>:</span><br><span class="line">        self.driver.get(login_url)</span><br><span class="line">        <span class="comment"># 载入登陆页面</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;###开始登陆###&#x27;</span>)</span><br><span class="line">    <span class="comment"># 登陆模式1：cookie登陆</span></span><br><span class="line">    <span class="keyword">elif</span> self.login_methed == <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(<span class="string">&#x27;cookies.pkl&#x27;</span>):</span><br><span class="line">            <span class="comment"># 如果没有cookie.pkl,就先获取cookie</span></span><br><span class="line">            self.set_cookie()</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self.driver.get(target_url)</span><br><span class="line">            self.get_cookie()</span><br></pre></td></tr></table></figure>
+
+<p>如果选择<code>cookie</code>方式登录，首次登录需要获取<code>cookie</code>进行保存，后续可以免登陆。所以需要一个获取和保存cookie的方法。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">set_cookie</span>(<span class="params">self</span>):</span><br><span class="line">    self.driver.get(damai_url)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;###请点击登录###&quot;</span>)</span><br><span class="line">    <span class="keyword">while</span> self.driver.title.find(<span class="string">&quot;大麦网-全球演出赛事官方购票平台&quot;</span>) != -<span class="number">1</span>: <span class="comment"># 判断是否主页</span></span><br><span class="line">        sleep(<span class="number">1</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;###请扫码登录###&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> self.driver.title != <span class="string">&quot;大麦网-全球演出赛事官方购票平台-100%正品、先付先抢、在线选座！&quot;</span>:</span><br><span class="line">        sleep(<span class="number">1</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;###扫码成功###&quot;</span>)</span><br><span class="line">    pickle.dump(self.driver.get_cookies(), <span class="built_in">open</span>(<span class="string">&quot;cookies.pkl&quot;</span>, <span class="string">&quot;wb&quot;</span>))</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;###Cookie保存成功###&quot;</span>)</span><br><span class="line">    self.driver.get(target_url)</span><br></pre></td></tr></table></figure>
+
+<p>得到cookie后保存到<code>cookies.pkl</code>，后续登录可以直接加载实现免登陆。其实，现在大多数网站都会有验证码之类的图形验证，相应破解的方法以后有机会重新写一篇专门讲解。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">get_cookie</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="comment"># 加载cookies</span></span><br><span class="line">        cookies = pickle.load(<span class="built_in">open</span>(<span class="string">&quot;cookies.pkl&quot;</span>, <span class="string">&quot;rb&quot;</span>)) </span><br><span class="line">        <span class="keyword">for</span> cookie <span class="keyword">in</span> cookies:</span><br><span class="line">            cookie_dict = &#123;</span><br><span class="line">                <span class="string">&#x27;domain&#x27;</span>:<span class="string">&#x27;.xxx.cn&#x27;</span>,</span><br><span class="line">                <span class="string">&#x27;name&#x27;</span>:cookies.get(<span class="string">&#x27;name&#x27;</span>),</span><br><span class="line">                <span class="string">&#x27;value&#x27;</span>:cookies.get(<span class="string">&#x27;value&#x27;</span>)</span><br><span class="line">            &#125;</span><br><span class="line">            self.driver.add_cookie(cookie_dict)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;###载入Cookie###&#x27;</span>)</span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e: </span><br><span class="line">        <span class="built_in">print</span>(e)</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-抢票并下单"><a href="#2-抢票并下单" class="headerlink" title="2. 抢票并下单"></a>2. 抢票并下单</h3><p>登录成功后，接下来应该进入购买页面，因为程序需要模拟买票的过程，所以需要程序自行判断什么时候点击什么按钮，大部分判断依据需要提前准备好，比如出现<strong>“立即购买”</strong>程序就点击它。</p>
+<p>在这个过程中，我们需要实现一个功能：判断页面中是否出现我们提前设定好的字符并点击。这个功能在抢票过程中会频繁使用。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">isElementExist</span>(<span class="params">self, element</span>):</span><br><span class="line">    flag = <span class="literal">True</span></span><br><span class="line">    browser = self.driver</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        browser.find_element_by_xpath(element)</span><br><span class="line">        <span class="keyword">return</span> flag</span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        flag = <span class="literal">False</span></span><br><span class="line">        <span class="keyword">return</span> flag</span><br></pre></td></tr></table></figure>
+
+<p>登陆成功后，使用<code>isElementExist()</code>判断网页中元素，参数为<code>xpath</code>路径，具体<code>xpath</code>规则此处不进行说明。</p>
+<p>识别成功后，点击按钮进入下一个页面。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">enter_concert</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;打开浏览器&quot;&quot;&quot;</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;###打开浏览器，进入目标网站###&quot;</span>)</span><br><span class="line">    self.driver.maximize_window()           <span class="comment"># 最大化窗口</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">#调用登陆</span></span><br><span class="line">    self.login()                            <span class="comment"># 登陆</span></span><br><span class="line">    self.driver.refresh()                   <span class="comment"># 刷新</span></span><br><span class="line">    self.status = <span class="number">2</span>                         <span class="comment"># 设置目前状态标识</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;###登陆成功###&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> self.isElementExist(<span class="string">&#x27;/html/body/div[2]/div[2]&#x27;</span>):</span><br><span class="line">        self.driver.find_element_by_xpath(<span class="string">&#x27;/html/body/div[2]/div[2]&#x27;</span>).click()</span><br></pre></td></tr></table></figure>
+
+<p>上面代码中的<code>xpath</code>均为示例，实际使用过程中，需要自己在chrome浏览器的<code>F12</code>开发者选项中自行查找。</p>
+<h3 id="3-抢票"><a href="#3-抢票" class="headerlink" title="3. 抢票"></a>3. 抢票</h3><p>从上面方法点击进入后，一般会进入详情页，比如演唱会抢座位，填写个人信息；电商平台的话就是填写收货地址；这部分可以根据自己的需求编写，大致流程就是使用<code>isElementExist()</code>判断页面是否存在某种元素，如果存在则点击。（所有需要写<code>xpath</code>的地方都空着）</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">choose_ticket</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">if</span> self.status == <span class="number">2</span>:            <span class="comment"># 登陆成功入口</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;=&quot;</span> * <span class="number">30</span>)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;###开始进行日期及票价选择###&quot;</span>)</span><br><span class="line">        <span class="keyword">while</span> self.driver.title.find(<span class="string">&#x27;确认订单&#x27;</span>) == -<span class="number">1</span>:</span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                buybutton = self.driver.find_element_by_class_name(<span class="string">&#x27;buybtn&#x27;</span>).text</span><br><span class="line">                <span class="keyword">if</span> buybutton == <span class="string">&quot;提交缺货登记&quot;</span>:</span><br><span class="line">                    <span class="comment"># 改变现有状态</span></span><br><span class="line">                    self.status = <span class="number">2</span></span><br><span class="line">                    self.driver.get(target_url)</span><br><span class="line">                    <span class="built_in">print</span>(<span class="string">&#x27;###刷新等待抢票###&#x27;</span>)</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                <span class="keyword">elif</span> buybutton == <span class="string">&#x27;立即预定&#x27;</span>:</span><br><span class="line">                    self.driver.find_element_by_class_name(<span class="string">&#x27;buybtn&#x27;</span>).click()</span><br><span class="line">                    self.status = <span class="number">3</span></span><br><span class="line">                <span class="keyword">elif</span> buybutton == <span class="string">&#x27;立即购买&#x27;</span>:</span><br><span class="line">                    self.driver.find_element_by_class_name(<span class="string">&#x27;buybtn&#x27;</span>).click()</span><br><span class="line">                    self.status = <span class="number">4</span></span><br><span class="line">                <span class="keyword">elif</span> buybutton == <span class="string">&#x27;选座购买&#x27;</span>:</span><br><span class="line">                    self.driver.find_element_by_class_name(<span class="string">&#x27;buybtn&#x27;</span>).click()</span><br><span class="line">                    self.status = <span class="number">5</span></span><br><span class="line">            <span class="keyword">except</span>:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&#x27;###未跳转到订单结算页面###&#x27;</span>)</span><br><span class="line">            title = self.driver.title</span><br><span class="line">            <span class="keyword">if</span> title == <span class="string">&#x27;选座购买&#x27;</span>:</span><br><span class="line">                self.choice_seats()</span><br><span class="line">            <span class="keyword">elif</span> title == <span class="string">&#x27;确认订单&#x27;</span>:</span><br><span class="line">                <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">                    <span class="built_in">print</span>(<span class="string">&#x27;waiting......&#x27;</span>)</span><br><span class="line">                    <span class="keyword">if</span> self.isElementExist(<span class="string">&#x27;&#x27;</span>):</span><br><span class="line">                        self.check_order()</span><br><span class="line">                        <span class="keyword">break</span></span><br></pre></td></tr></table></figure>
+
+<p>这里以演唱会门票为例，会在点击下单后，进入<strong>选择座位</strong>、<strong>确定下单</strong>。同样没有写<code>xpath</code>部分。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">choice_seats</span>(<span class="params">self</span>):								<span class="comment"># 选择座位</span></span><br><span class="line">    <span class="keyword">while</span> self.driver.title == <span class="string">&#x27;选座购买&#x27;</span>:</span><br><span class="line">        <span class="keyword">while</span> self.isElementExist():</span><br><span class="line">            <span class="comment"># 手动选择座位，选择完成。。。。会消失</span></span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&#x27;请快速选择座位！！！&#x27;</span>)</span><br><span class="line">        <span class="keyword">while</span> self.isElementExist():</span><br><span class="line">            <span class="comment"># 找到后点击确认选座</span></span><br><span class="line">            self.driver.find_element_by_xpath().click()</span><br></pre></td></tr></table></figure>
+
+<p>你会发现，这个方法也是用<code>isElementExist()</code>实现的，本质上还是<strong>判断–&gt;点击</strong>的流程。</p>
+<h3 id="4-下单"><a href="#4-下单" class="headerlink" title="4. 下单"></a>4. 下单</h3><p>上面的步骤都顺利进行后，就可以进行下单了。下面是<strong>确认下单</strong>和<strong>脚本结束</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">def check_order(self):</span><br><span class="line">    if self.status in [3, 4, 5]:</span><br><span class="line">        print(&#x27;###开始确认订单###&#x27;)</span><br><span class="line">        try:</span><br><span class="line">            # 默认选择第一个购票人信息</span><br><span class="line">            self.driver.find_element_by_xpath().click()</span><br><span class="line">        except:</span><br><span class="line">            print(&#x27;###购票人信息选中失败，自行查看元素位置###&#x27;)</span><br><span class="line">            print(e)</span><br><span class="line">        # 最后一步。提交订单</span><br><span class="line">        sleep(0.5)    # 太快会导致按钮点击无效</span><br><span class="line">        self.driver.find_element_by_xpath().click()</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">finish</span>(<span class="params">self</span>):</span><br><span class="line">    self.driver.quit()</span><br></pre></td></tr></table></figure>
+
+<p>一般来讲，抢票整个过程也就几分钟，再长估计也就抢完了。鉴于现在各大网站对脚本的封堵，网页元素不停的变更，没有一个脚本可以实现一劳永逸的生效。本文通过对抢票流程的拆解，展示了抢票的完整过程。</p>
+<p>后续会继续分析如何破解各大网站的验证码。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Selenium/" rel="tag"># Selenium</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/12/07/Python%E8%A3%85%E9%A5%B0%E5%99%A8/" rel="prev" title="Python装饰器">
+                  <i class="fa fa-angle-left"></i> Python装饰器
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">What</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
