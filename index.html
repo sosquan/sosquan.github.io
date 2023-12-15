@@ -168,7 +168,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/12/15/Python%E5%A4%A7%E9%BA%A6%E7%BD%91%E6%8A%A2%E7%A5%A8/" class="post-title-link" itemprop="url">Python大麦网抢票</a>
+          <a href="/2023/12/15/Python%E5%A4%A7%E9%BA%A6%E7%BD%91%E6%8A%A2%E7%A5%A8/" class="post-title-link" itemprop="url">Python抢票过程解析</a>
         </h2>
 
         <div class="post-meta-container">
@@ -180,7 +180,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2023-12-15 14:29:14 / 修改时间：14:29:44" itemprop="dateCreated datePublished" datetime="2023-12-15T14:29:14+08:00">2023-12-15</time>
+      <time title="创建时间：2023-12-15 14:29:14 / 修改时间：14:36:14" itemprop="dateCreated datePublished" datetime="2023-12-15T14:29:14+08:00">2023-12-15</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -202,7 +202,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h3 id="Python大麦网抢票"><a href="#Python大麦网抢票" class="headerlink" title="Python大麦网抢票"></a>Python大麦网抢票</h3><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>最近突然对抢票脚本感兴趣，就在网上找了一些相关内容，有的只讲使用方法，也不上传代码，也有用代码卖钱的。总之质量参差不齐，就想着自己写一个抢票脚本的过程，虽然不能对所有网站起作用，但基本上所有脚本原理都是模拟正常买东西的流程，至少在思路上不会有太大变化。<br>下面就以XXX网购买演出票代码为例，总结一下抢票的一个思路，理论上适用于电商等平台。但因为此类脚本为灰色地带，<strong>因此在使用脚本时需要遵守相关的法律法规和道德规范，避免出现违规操作的情况发生。</strong></p>
+          <h3 id="Python抢票过程解析"><a href="#Python抢票过程解析" class="headerlink" title="Python抢票过程解析"></a>Python抢票过程解析</h3><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>最近突然对抢票脚本感兴趣，就在网上找了一些相关内容，有的只讲使用方法，也不上传代码，也有用代码卖钱的。总之质量参差不齐，就想着自己写一个抢票脚本的过程，虽然不能对所有网站起作用，但基本上所有脚本原理都是模拟正常买东西的流程，至少在思路上不会有太大变化。<br>下面就以XXX网购买演出票代码为例，总结一下抢票的一个思路，理论上适用于电商等平台。但因为此类脚本为灰色地带，<strong>因此在使用脚本时需要遵守相关的法律法规和道德规范，避免出现违规操作的情况发生。</strong></p>
 <p>我将整个流程分为：<strong>登录–&gt;抢票–&gt;选座、选地址–&gt;下单成功</strong></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 导入必要模块</span></span><br><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver <span class="comment"># webdrive用来操作浏览器</span></span><br><span class="line"><span class="keyword">from</span> time <span class="keyword">import</span> sleep		   <span class="comment"># 做一些延时操作，避免请求频率过高</span></span><br><span class="line"><span class="keyword">import</span> pickle        		   <span class="comment"># 保存和读取cookie实现免登陆</span></span><br><span class="line"><span class="keyword">import</span> os                      <span class="comment"># 操作文件的模块</span></span><br></pre></td></tr></table></figure>
 
